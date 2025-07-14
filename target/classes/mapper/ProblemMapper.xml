@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?> <!-- XML 파일 선언, UTF-8 인코딩 사용 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> <!-- MyBatis 매퍼 DTD 정의 -->
+<mapper namespace="www.silver.dao.ProblemDAO"> <!-- ProblemDAO 네임스페이스 정의 -->
+    <!-- 모든 문제를 조회하는 SQL 쿼리 -->
+    <select id="getAllProblems" resultType="www.silver.vo.ProblemVO"> <!-- ID와 반환 타입 지정 -->
+        SELECT problemId, title, description, sampleInput, sampleOutput, difficulty, language, createdAt <!-- 조회할 컬럼 목록 -->
+        FROM problems <!-- problems 테이블에서 데이터 조회 -->
+        ORDER BY createdAt DESC <!-- 생성일 기준 내림차순 정렬 -->
+    </select>
+    <!-- 언어와 난이도로 필터링된 문제를 조회하는 SQL 쿼리 -->
+    <select id="getProblemsByLanguageAndDifficulty" parameterType="map" resultType="www.silver.vo.ProblemVO"> <!-- 파라미터와 반환 타입 지정 -->
+        SELECT problemId, title, description, sampleInput, sampleOutput, difficulty, language, createdAt <!-- 조회할 컬럼 목록 -->
+        FROM problems <!-- problems 테이블에서 데이터 조회 -->
+        <where> <!-- 조건절 시작 -->
+            <if test="language != null and language != ''"> <!-- language 파라미터가 null이 아니고 빈 문자열이 아닌 경우 -->
+                language = #{language} <!-- 언어 조건 추가 -->
+            </if>
+            <if test="difficulty != null and difficulty != ''"> <!-- difficulty 파라미터가 null이 아니고 빈 문자열이 아닌 경우 -->
+                AND difficulty = #{difficulty} <!-- 난이도 조건 추가 -->
+            </if>
+        </where> <!-- 조건절 종료 -->
+        ORDER BY createdAt DESC <!-- 생성일 기준 내림차순 정렬 -->
+    </select>
+    <!-- 특정 문제 ID로 문제를 조회하는 SQL 쿼리 -->
+    <select id="getProblemById" parameterType="int" resultType="www.silver.vo.ProblemVO"> <!-- 파라미터와 반환 타입 지정 -->
+        SELECT problemId, title, description, sampleInput, sampleOutput, difficulty, language, createdAt <!-- 조회할 컬럼 목록 -->
+        FROM problems <!-- problems 테이블에서 데이터 조회 -->
+        WHERE problemId = #{problemId} <!-- 문제 ID로 필터링 -->
+    </select>
+</mapper>
